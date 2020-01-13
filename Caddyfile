@@ -1,0 +1,8 @@
+learnue.com {
+    tls luochuanyuewu@qq.com
+    gzip
+    proxy / web:8088 {
+        transparent
+    }
+}
+

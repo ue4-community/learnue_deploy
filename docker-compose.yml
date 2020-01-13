@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+    proxy:
+        image: abiosoft/caddy
+        container_name: learnue_proxy
+        volumes:
+            - ./Caddyfile:/etc/Caddyfile
+            - ./caddy:/root/.caddy
+        ports:
+            - "80:80"
+            - "443:443"
+        environment:
+            ACME_AGREE: "true"
+        entrypoint:
+            - /bin/parent
+            - caddy
+        command:
+            [
+                "--conf",
+                "/etc/Caddyfile",
+                "--log",
+                "stdout",
+                "--agree=true",
+                "--default-sni=learnue.com",
+            ]
+    web:
+        image: registry-vpc.cn-beijing.aliyuncs.com/letsgit/learnue:latest
+        container_name: learnue_web
+        restart: always
+        depends_on:
+            - mysql
+            - redis
+        links:
+            - mysql
+            - redis
+        ports:
+            - "3001:3001"
+        volumes:
+            - ./config/env.yml:/app/config/env.yml
+            - ./logs:/app/log
+    mysql:
+        image: mysql:8
+        container_name: learnue_mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+        volumes:
+            - ./mysql_data:/var/lib/mysql
+    redis:
+        image: redis:5-alpine
+        container_name: learnue_redis
+        restart: always
+        environment:
+            - TZ=Asia/Shanghai
