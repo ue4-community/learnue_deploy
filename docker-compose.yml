@@ -22,7 +22,7 @@ services:
                 "--log",
                 "stdout",
                 "--agree=true",
-                "--default-sni=learnue.com",
+                "--default-sni=${DOMAIN}|",
             ]
     web:
         image: registry-vpc.cn-beijing.aliyuncs.com/letsgit/learnue:latest
@@ -39,6 +39,7 @@ services:
         volumes:
             - ./config/env.yml:/app/config/env.yml
             - ./logs:/app/log
+            - ./data:/app/data
     mysql:
         image: mysql:8
         container_name: learnue_mysql
