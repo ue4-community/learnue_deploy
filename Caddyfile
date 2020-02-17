@@ -3,5 +3,6 @@ learnue.com {
     gzip
     proxy / web:8088 {
         transparent
+        websocket
     }
 }
