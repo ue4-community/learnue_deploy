@@ -49,6 +49,8 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
+        ports:
+            - "3306:3306"
         volumes:
             - ./mysql_data:/var/lib/mysql
     redis:
@@ -57,3 +59,13 @@ services:
         restart: always
         environment:
             - TZ=Asia/Shanghai
+    solr:
+        image: solr:8
+        container_name: learnue_solr
+        ports:
+        - "8983:8983"
+        volumes:
+        - ./data/solrData:/var/solr/data
+        command:
+        - solr-precreate
+        - learnue
